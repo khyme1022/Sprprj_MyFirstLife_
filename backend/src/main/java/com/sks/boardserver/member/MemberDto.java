@@ -67,13 +67,13 @@ public class MemberDto {
      * http 요청으로 받은 값의 파라미터를 통해 MemberDto 객체를 생성 후 반환
      */
     public MemberDto(HttpServletRequest request) throws ParseException {
-        this.email = request.getParameter("email");
-        this.pwd = request.getParameter("pwd");
-        this.name = request.getParameter("name");
-        this.introduce = request.getParameter("introduce");
-        this.birth = stringToDate(request.getParameter("birth"));
-        this.gender = StringUtils.equals(request.getParameter("gender"), "M") ? Gender.MALE : Gender.FEMALE;
-        this.openPostInfo = BooleanUtils.toBoolean(request.getParameter("openPostInfo"), "true", "fals");
+        this.email = validateValue(request.getParameter("email"), 255);
+        this.pwd = validateValue(request.getParameter("pwd"), 255);
+        this.name = validateValue(request.getParameter("name"), 30);
+        this.introduce = validateValue(request.getParameter("introduce"), 255);
+        this.birth = defaultDate(request.getParameter("birth"));
+        this.gender = defaultGender(request.getParameter("gender"));
+        this.openPostInfo =defaultOpenPostInfo(request.getParameter("openPostInfo"));
     }
 
     /**
@@ -84,21 +84,9 @@ public class MemberDto {
         this.pwd = entity.getPwd();
         this.name = entity.getName();
         this.introduce = entity.getIntroduce();
-        this.birth = entity.getBirth();
+        this.birth = entity.getBirthDate();
         this.gender = entity.isGender() ? Gender.MALE : Gender.FEMALE;
         this.openPostInfo = entity.isOpenPostInfo();
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setIntroduce(String introduce) {
-        this.introduce = introduce;
     }
 
     /**
@@ -110,10 +98,18 @@ public class MemberDto {
                 .pwd(this.pwd)
                 .name(this.name)
                 .introduce(this.introduce)
-                .birth(this.birth)
+                .birthDate(this.birth)
                 .gender(this.gender.toBoolean())
                 .openPostInfo(this.openPostInfo)
                 .build();
+    }
+
+    /**
+     * 문자열 타입의 value 값을 {@link Date} 타입으로 리턴한다.
+     * <p>value 값이 공백이면 객체의 birth 값을 리턴한다.</p>
+     */
+    private Date defaultDate(String value) throws ParseException {
+        return StringUtils.isBlank(value) ? this.birth : stringToDate(value);
     }
 
     /**
@@ -123,5 +119,57 @@ public class MemberDto {
     private Date stringToDate(String value) throws ParseException {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREAN);
         return format.parse(value);
+    }
+
+    /**
+     * 문자열 타입의 value 값을 {@link Gender} 타입으로 리턴한다.
+     */
+    private Gender stringToGender(String value){
+        return StringUtils.equals(value, "M") ? Gender.MALE : Gender.FEMALE;
+    }
+
+    /**
+     * 문자열 타입의 value 값을 {@link Gender} 타입으로 리턴한다.
+     * <p>value 값이 공백 값이면 객체의 gender 값을 리턴한다.</p>
+     */
+    private Gender defaultGender(String value){
+        return StringUtils.isBlank(value) ? this.gender : stringToGender(value);
+    }
+
+    /**
+     * 문자열 타입의 value 값을 boolean 타입으로 리턴한다.
+     * <p>value 값이 공백 값이면 객체의 openPostInfo 값을 리턴한다.</p>
+     */
+    private boolean defaultOpenPostInfo(String value) {
+        return StringUtils.isBlank(value) ? this.openPostInfo : BooleanUtils.toBoolean(value);
+    }
+
+    /**
+     * 문자열 타입의 value 값이 유효한 값인지 확인한다.
+     * <p>value 값의 길이가 limit 값을 넘으면 exception을 발생시킨다.</p>
+     */
+    private String validateValue(String value, int limit){
+        if(value != null && value.length() > limit){
+            throw new IllegalArgumentException();
+        }
+        return value;
+    }
+
+    /**
+     * 해당 객체의 특정 값을 수정한다.
+     * <ul>
+     *     <li>pwd</li>
+     *     <li>introduce</li>
+     *     <li>birth</li>
+     *     <li>gender</li>
+     *     <li>openPostInfo</li>
+     * </ul>
+     */
+    public void modify(HttpServletRequest request) throws ParseException {
+        this.pwd = StringUtils.defaultString(validateValue(request.getParameter("pwd"), 30), this.pwd);
+        this.introduce = StringUtils.defaultString(validateValue(request.getParameter("introduce"), 255), this.introduce);
+        this.birth = defaultDate(request.getParameter("birth"));
+        this.gender = defaultGender(request.getParameter("gender"));
+        this.openPostInfo = defaultOpenPostInfo(request.getParameter("openPostInfo"));
     }
 }
