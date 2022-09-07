@@ -29,20 +29,26 @@ public class BoardServiceImpl implements BoardService {
         Board savedBoard = boardRepository.save(board);
     }
 
-    /** 글 읽기 메소드
+    /** 글 목록 조회 메소드
      * READ */
     @Override
-    public List<BoardDto> selectBoard(Long number) {
+    public List<BoardDto> selectBoardAll(Long number) {
         List<Board> boardList = boardRepository.findByNo(number);
-        List<BoardDto> selectedBoardList = boardList.stream().map(m->new BoardDto(m)).collect(Collectors.toList());
+        List<BoardDto> selectedBoardList = boardList.stream().map(BoardDto::new).collect(Collectors.toList());
+
         return selectedBoardList;
     }
-
+    /** 글 하나 조회 메소드 */
+    @Override
+    public BoardDto selectBoard(int number) {
+        return null;
+    }
+    /** 글 수정 조회 메소드 */
     @Override
     public void updateBoard(BoardDto boardDto) {
 
     }
-
+    /** 글 삭제 메소드 */
     @Override
     public void deleteBoard(Long number) throws Exception {
 
