@@ -1,19 +1,24 @@
 package com.sks.boardserver.board;
 
 import com.querydsl.jpa.impl.JPAQuery;
+import com.sks.boardserver.board.data.BoardDto;
+import com.sks.boardserver.board.data.BoardRepository;
 import com.sks.boardserver.board.entity.Board;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @SpringBootTest
 public class boardRepositoryTest {
     @PersistenceContext
     EntityManager entityManager;
-
+    @Autowired
+    BoardRepository boardRepository;
     @Test
     void queryDslTest(){
         JPAQuery<Board> query = new JPAQuery(entityManager);
@@ -31,4 +36,5 @@ public class boardRepositoryTest {
             System.out.println("--------");
         }
     }
+
 }

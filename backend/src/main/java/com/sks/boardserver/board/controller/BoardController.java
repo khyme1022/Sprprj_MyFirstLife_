@@ -20,21 +20,28 @@ public class BoardController {
     {
         this.boardService = boardService;
     }
-
-    @GetMapping
-    public ResponseEntity<List<BoardDto>> getBoard(Long number){
-        List<BoardDto> boardDto = boardService.selectBoard(number);
+    
+    //Page 번호를 매개변수로 받아 해당 페이지에 해당하는 게시글 목록 보여줌
+    @GetMapping()
+    public ResponseEntity<List<BoardDto>> getBoardAll(Long number){
+        List<BoardDto> boardDto = boardService.selectBoardAll(number);
         return ResponseEntity.status(HttpStatus.OK).body(boardDto);
     }
+    //글번호를 파라미터로 받아와 보여주는 메소드
+    @GetMapping("/{boardNo}")
+    public ResponseEntity<BoardDto> getBoard(Long number){
+        return null;
+    }
 
+    //글쓰기
     @PostMapping
     public ResponseEntity<String> writeBoard(HttpServletRequest request) {
         try {
-            System.out.println(request.getParameter("no"));
             boardService.insertBoard(request);
         }catch (ParseException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Occurred exception while parsing date");
         }
         return ResponseEntity.status(HttpStatus.OK).body("success");
     }
+
 }
