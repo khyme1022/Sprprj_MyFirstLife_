@@ -6,7 +6,7 @@ import javax.persistence.*;
 import java.util.Date;
 
 /** 회원 entity */
-@Data
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity(name = "MEMBER")
@@ -25,29 +25,31 @@ public class Member {
     private String pwd;
 
     /** 이메일 */
-    @Getter
     @Setter
     @Column(name = "EMAIL", nullable = false, unique = true) // 정해주지 않으면 기본 길이는 255
     private String email;
 
     /** 이름 */
-    @Getter
     @Setter
     @Column(name = "NAME", length = 30, nullable = false)
     private String name;
 
     /** 자기 소개 */
-    @Getter
     @Setter
     @Column(name = "INTRODUCE")
     private String introduce;
 
     /** 생년월일 */
-    @Getter
     @Setter
-    @Column(name = "BIRTH", columnDefinition = "DATETIME", nullable = false) // columnDefinition을 사용하면 원하는 타입으로 데이터 추출이 가능하다함
+    @Column(name = "BIRTH_DATE", columnDefinition = "DATETIME", nullable = false) // columnDefinition을 사용하면 원하는 타입으로 데이터 추출이 가능하다함
     @Temporal(TemporalType.TIMESTAMP) // 날짜 타입을 매핑 할 때 사용
-    private Date birth;
+    private Date birthDate;
+
+    /** 회원 탈퇴 날짜 */
+    @Setter
+    @Column(name = "DELETE_DATE", columnDefinition = "DATETIME") // columnDefinition을 사용하면 원하는 타입으로 데이터 추출이 가능하다함
+    @Temporal(TemporalType.TIMESTAMP) // 날짜 타입을 매핑 할 때 사용
+    private Date deleteDate;
 
     /**
      * 성별
@@ -56,7 +58,6 @@ public class Member {
      *     <li> false : 여자</li>
      * </ul>
      * */
-    @Getter
     @Setter
     @Column(name = "GENDER", nullable = false, columnDefinition = "TINYINT(4)")
     private boolean gender;
@@ -68,7 +69,6 @@ public class Member {
      *     <li> false : 비공개</li>
      * </ul>
      * */
-    @Getter
     @Setter
     @Column(name = "OPEN_POST_INFO", nullable = false, columnDefinition = "TINYINT(4)")
     private boolean openPostInfo;
