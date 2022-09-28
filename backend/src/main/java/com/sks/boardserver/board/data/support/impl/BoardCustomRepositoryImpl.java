@@ -1,13 +1,14 @@
 package com.sks.boardserver.board.data.support.impl;
 
-import com.sks.boardserver.board.QBoard;
-import com.sks.boardserver.board.data.BoardRepository;
+import com.querydsl.core.dml.UpdateClause;
+import com.querydsl.jpa.hibernate.HibernateUpdateClause;
+import com.querydsl.jpa.impl.JPAUpdateClause;
 import com.sks.boardserver.board.data.support.BoardCustomRepository;
 import com.sks.boardserver.board.entity.Board;
+import com.sks.boardserver.board.entity.QBoard;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
 
 // QueryDSL 메소드 정의 구현 클래스
 @Component
@@ -18,12 +19,28 @@ public class BoardCustomRepositoryImpl extends QuerydslRepositorySupport impleme
     }
 
     @Override
-    public List<Board> findByNo(Long Number) {
-        QBoard board = QBoard.board;
+    public Board findByNo(int number) {
+        System.out.print("findByNO : " + number);
+        System.out.println();
+        QBoard qBoard = QBoard.board;
 
-        List<Board> boardList = from(board)
-                .select(board)
-                .fetch();
-        return boardList;
+        Board board = from(qBoard)
+                .where(qBoard.no.eq(number))
+                        .select(qBoard).fetchOne();
+        System.out.println(board);
+        return board;
     }
+
+    public void updateByNo(String title, String content, int number){
+        QBoard qBoard = QBoard.board;
+        update(qBoard).set(qBoard.title, title).set(qBoard.content, content).where(qBoard.no.eq(number)).execute();
+
+    }
+
+    @Override
+    public void deleteByNo(int number) {
+        QBoard qBoard = QBoard.board;
+        update(qBoard).set(qBoard.isDelete,true).where(qBoard.no.eq(number)).execute();
+    }
+
 }
