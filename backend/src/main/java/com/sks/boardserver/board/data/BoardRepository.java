@@ -15,6 +15,6 @@ import java.util.List;
 
 @Repository
 public interface BoardRepository extends JpaRepository<Board, Long>, BoardCustomRepository {
-    public Page<Board> findByisDelete(Boolean isDelete, Pageable pageable); // page, sort 사용해서 해야함
-    public Board findByisDeleteAndNo(Boolean isDelete, int no);
+    Page<Board> findByisDeleteOrderByNoDesc(Boolean isDelete, Pageable pageable); // page, sort 사용해서 해야함
+    Board findByisDeleteAndNo(Boolean isDelete, int no);
 }

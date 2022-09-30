@@ -33,14 +33,21 @@ public class BoardCustomRepositoryImpl extends QuerydslRepositorySupport impleme
 
     public void updateByNo(String title, String content, int number){
         QBoard qBoard = QBoard.board;
-        update(qBoard).set(qBoard.title, title).set(qBoard.content, content).where(qBoard.no.eq(number)).execute();
+        update(qBoard)
+                .set(qBoard.title, title)
+                .set(qBoard.content, content)
+                .where(qBoard.no.eq(number))
+                .execute();
 
     }
 
     @Override
     public void deleteByNo(int number) {
         QBoard qBoard = QBoard.board;
-        update(qBoard).set(qBoard.isDelete,true).where(qBoard.no.eq(number)).execute();
+        update(qBoard)
+                .set(qBoard.isDelete,true)
+                .where(qBoard.no.eq(number))
+                .execute();
     }
 
 }

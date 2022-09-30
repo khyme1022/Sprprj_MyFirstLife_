@@ -21,7 +21,9 @@ public class BoardServiceImpl implements BoardService {
     private final BoardRepository boardRepository;
 
     @Autowired
-    public BoardServiceImpl(BoardRepository boardRepository){this.boardRepository = boardRepository;}
+    public BoardServiceImpl(BoardRepository boardRepository){
+        this.boardRepository = boardRepository;
+    }
 
     /** 글 작성 메소드
      * HttpServletRequest 객체를 받아와서 BoardDto 객체 생성 후 toEntity() 메소드로 엔티티 객체로 바꿔준 후 저장
@@ -38,19 +40,18 @@ public class BoardServiceImpl implements BoardService {
      * READ */
     @Override
     public List<BoardDto> selectBoardList(int pageNum) {
-        Page<Board> boardList = boardRepository.findByisDelete(false,PageRequest.of(pageNum,2));
-        List<BoardDto> selectedBoardList = boardList.stream().map(BoardDto::new).collect(Collectors.toList());
+        Page<Board> boardList = boardRepository.findByisDeleteOrderByNoDesc(false,PageRequest.of(pageNum,2));
 
-        return selectedBoardList;
+        return boardList.stream().map(BoardDto::new).collect(Collectors.toList());
     }
     /** 
      * 글 하나 조회 메소드
      */
+    @Override
     public BoardDto selectBoard(int boardNum){
         System.out.println("boardService : " + boardNum);
         Board board = boardRepository.findByisDeleteAndNo(false,boardNum);
-        BoardDto boardDto  = new BoardDto(board);
-        return boardDto;
+        return new BoardDto(board);
     }
 
     /** 글 수정 조회 메소드 */

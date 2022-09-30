@@ -3,7 +3,6 @@ package com.sks.boardserver.board.controller;
 import com.sks.boardserver.board.data.BoardDto;
 import com.sks.boardserver.board.service.BoardService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,9 +25,9 @@ public class BoardController {
     /**
      * request 값을 받아와 DB에 삽입
      * @param request
-     * @return
+     * @return String
      */
-    @PostMapping
+    @PostMapping("/write")
     public ResponseEntity<String> writeBoard(HttpServletRequest request) {
         try {
             boardService.insertBoard(request);
@@ -55,7 +54,7 @@ public class BoardController {
     /**
      * /board/2로 글번호 요청 시 해당하는 글을 보여줌
      * @param boardNum
-     * @return
+     * @return BoardDto
      */
     @GetMapping("/{boardNum}")
     public ResponseEntity<BoardDto> readBoard(@PathVariable("boardNum") int boardNum){
@@ -65,7 +64,7 @@ public class BoardController {
     /**
      * /board/2로 PUT 요청 시 글번호와 request 요청을 받아 글을 수정함
      * @param boardNum
-     * @return
+     * @return String
      */
     @Transactional
     @PutMapping("/{boardNum}")
@@ -81,7 +80,7 @@ public class BoardController {
     /**
      * /board/2로 DELETE 요청 시 해당 글 번호의 isDelete 속성을 true로 변경함
      * @param boardNum
-     * @return
+     * @return String
      */
     @Transactional
     @DeleteMapping("/{boardNum}")
@@ -95,9 +94,6 @@ public class BoardController {
         return ResponseEntity.status(HttpStatus.OK).body("삭제 완료");
 
     }
-
-    
-
 
 
 }
