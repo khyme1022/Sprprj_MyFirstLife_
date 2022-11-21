@@ -8,18 +8,6 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 /*
-    reply_no : 댓글 번호
-    board_no : 댓글 달린 글 번호
-    writer : 댓글 작성자
-    content : 댓글 내용
-    date : 작성 날짜
-    isDelete : 삭제 여부
-    recommend : 추천 수
-
-    대댓글 전용 컬럼
-    order : 순서 
-    parent_no : 부모 댓글 넘버
-    
  */
 @Getter
 @Setter
@@ -35,7 +23,7 @@ public class BoardReply {
     @Column(name = "REPLY_NO", nullable = false,updatable = false)
     private int replyNo;
     // 댓글 달린 글 번호
-    @Column(name = "BOARD_NO", nullable = false, updatable = false)
+    @Column(name = "BOARD_NO", length = 30, nullable = false)
     private int boardNo;
     // 댓글 작성자
     @Column(name = "REPLY_WRITER", length = 30, nullable = false)
@@ -53,11 +41,8 @@ public class BoardReply {
     // 추천 수
     @Column(name = "REPLY_RECOMMEND", nullable = false, columnDefinition = "Integer default 0")
     private int recommend;
+    // 대댓글을 위한 연관관계 설정
 
-    @Column(name = "ORDER")
-    private int order;
 
-    @Column(name = "REPLY_PARENT_NO")
-    private int parentNo;
 
 }

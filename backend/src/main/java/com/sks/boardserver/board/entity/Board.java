@@ -5,8 +5,10 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import javax.xml.stream.events.Comment;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -54,6 +56,7 @@ public class Board{
     /** 이미지 파일 루트  */
     @Column(name = "BOARD_IMG_ROUTE",columnDefinition ="LONGTEXT default NULL" )
     private String imgRoute;
+
 
     // 생각해보니 액자형 게시판을 만든다고 했는데 게시글에 답글 게시글 다는 건 쓸모가 없는 것 같아서 자식글 위한 컬럼들은 다 삭제함
 }

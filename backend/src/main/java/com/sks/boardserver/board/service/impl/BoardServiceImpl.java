@@ -1,7 +1,8 @@
 package com.sks.boardserver.board.service.impl;
 
-import com.sks.boardserver.board.data.BoardDto;
+import com.sks.boardserver.board.data.BoardRequestDto;
 import com.sks.boardserver.board.data.BoardRepository;
+import com.sks.boardserver.board.data.BoardResponseDto;
 import com.sks.boardserver.board.entity.Board;
 import com.sks.boardserver.board.service.BoardService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,6 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletRequest;
 import java.text.ParseException;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -30,7 +30,7 @@ public class BoardServiceImpl implements BoardService {
      * CREATE */
     @Override
     public void insertBoard(HttpServletRequest request) throws ParseException {
-        Board board = new BoardDto(request).toEntity();
+        Board board = new BoardRequestDto(request).toEntity();
         boardRepository.save(board);
     }
 
@@ -39,25 +39,24 @@ public class BoardServiceImpl implements BoardService {
      * 정렬 순서 바꿔야함
      * READ */
     @Override
-    public List<BoardDto> selectBoardList(int pageNum) {
+    public List<BoardResponseDto> selectBoardList(int pageNum) {
         Page<Board> boardList = boardRepository.findByisDeleteOrderByNoDesc(false,PageRequest.of(pageNum,2));
 
-        return boardList.stream().map(BoardDto::new).collect(Collectors.toList());
+        return boardList.stream().map(BoardResponseDto::new).collect(Collectors.toList());
     }
     /** 
      * 글 하나 조회 메소드
      */
     @Override
-    public BoardDto selectBoard(int boardNum){
-        System.out.println("boardService : " + boardNum);
+    public BoardResponseDto selectBoard(int boardNum){
         Board board = boardRepository.findByisDeleteAndNo(false,boardNum);
-        return new BoardDto(board);
+        return new BoardResponseDto(board);
     }
 
     /** 글 수정 조회 메소드 */
     @Override
     public void updateBoard(HttpServletRequest request, int boardNum) throws ParseException {
-        Board updateBoard = new BoardDto(request).toEntity();
+        Board updateBoard = new BoardRequestDto(request).toEntity();
         boardRepository.updateByNo(updateBoard.getTitle(),updateBoard.getContent(), boardNum);
 
     }

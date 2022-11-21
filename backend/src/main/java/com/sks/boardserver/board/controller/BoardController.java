@@ -1,6 +1,7 @@
 package com.sks.boardserver.board.controller;
 
-import com.sks.boardserver.board.data.BoardDto;
+import com.sks.boardserver.board.data.BoardRequestDto;
+import com.sks.boardserver.board.data.BoardResponseDto;
 import com.sks.boardserver.board.service.BoardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -46,9 +47,9 @@ public class BoardController {
      *     쿼리스트링으로 파라미터 받아올 시 해당하는 페이지를 보여줌
      */
     @GetMapping
-    public ResponseEntity<List<BoardDto>> readBoardList(@RequestParam(value = "page",required = false, defaultValue = "0") int page){
-        System.out.println("결과 : " + boardService.selectBoardList(page));
-        return ResponseEntity.ok(boardService.selectBoardList(page));
+    public ResponseEntity<List<BoardResponseDto>> readBoardList(@RequestParam(value = "page",required = false, defaultValue = "1") int page){
+        System.out.println("결과 : " + boardService.selectBoardList(page-1));
+        return ResponseEntity.ok(boardService.selectBoardList(page-1));
     }
 
     /**
@@ -57,7 +58,7 @@ public class BoardController {
      * @return BoardDto
      */
     @GetMapping("/{boardNum}")
-    public ResponseEntity<BoardDto> readBoard(@PathVariable("boardNum") int boardNum){
+    public ResponseEntity<BoardResponseDto> readBoard(@PathVariable("boardNum") int boardNum){
         System.out.println(boardNum);
         return ResponseEntity.ok(boardService.selectBoard(boardNum));
     }
